@@ -9,3 +9,5 @@ The website verifies that the email has not been used already, that the password
 Link to the admin page of the club: http://cscilab.bc.edu/~chahinn/hw12-Updated/adminpage.php
 
 Displays all the users and the data entered. As well the app allows the admin to send emails to a particular groups of users.
+
+-Nicolas Chahin
