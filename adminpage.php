@@ -17,10 +17,10 @@
 <?php
 	include 'include/dbconn1.php';
 	$dbc3=connect_to_db( "chahinn" );
-	
+
 	$sqltable = "SELECT * FROM newclubdb";
 	$records= perform_query($dbc3, $sqltable);
-	
+
 ?>
 
 <table width="600" border="1" cellpadding="1" cellspacing="1">
@@ -31,11 +31,11 @@
 		<th>Email</th>
 		<th>Registration Date</th>
 	</tr>
-	
+
 	<?php
-	
+
 	$d=0;
-	
+
 	while($member = mysqli_fetch_assoc($records)){
 		 if($d % 2 == 0){
             $bgcolor= "#006666";
@@ -44,21 +44,21 @@
             $bgcolor= "#CC6699";
   		 }
          $d++;
-		
-		
+
+
 		echo "<tr bgcolor='$bgcolor'>";
-		
+
 		echo "<td>" .$member['firstname']. "</td>";
 		echo "<td>" .$member['lastname']. "</td>";
 		echo "<td>" .$member['memtype']. "</td>";
 		echo "<td>" .$member['email']. "</td>";
 		echo "<td>" .$member['timedate']. "</td>";
-		
+
 		echo "</tr>";
 	}
-	
+
 	?>
-	
+
 
 </table>
 <br>
@@ -66,7 +66,7 @@
 <form method="get">
 <fieldset>
 	<legend>Create Group Email</legend>
-	
+
 			<br>
 			Subject: <span id="subjectmessage" ></span> <br> <input type="text" name="subject" id ="subject1" required> <br> <br>
 			Your Message: <span id="yourmessagemess"></span>  <br> <br><textarea rows="5" cols="40" name="yourmessage" id="yourmessage1" required> </textarea> <br><br>
@@ -77,31 +77,32 @@
 			Mail Password: <span id="mailpasswordmessage"></span><br> <input type="text" name="mailpassword" id="mailpassword1" required> <br>
 			<br>
 			<input type='submit' name='sendemails' value='Send Your Message'>
-  
+
 </fieldset>
 </form>
 
 <?php
-	
-	
-	if(isset($_GET['sendemails'])){	
-		
+
+
+	if(isset($_GET['sendemails'])){
+
     	//$to1 = $email2;
 		$subject1 = $_GET['subject'];
 		$txt1 = $_GET['yourmessage'];
+		$txt1 = htmlspecialchars($txt1);
 		echo "$txt1";
 		$headers1 = "From: chahinn@bc.edu";
 		$membershiptype= $_GET['membership'];
 		$accesspassword= sha1($_GET['mailpassword']);
 		$encryptedverification="1785ed6ccf537856a2e5d0935a1ffb2dde2d3ab5";
-		
-		
-		
+
+
+
 		if(!empty($membershiptype) AND ($accesspassword==$encryptedverification) ) {
-		
+
 		if(count($membershiptype)==1){
 			$sqlselectemails= "SELECT * FROM `newclubdb`  WHERE memtype='$membershiptype[0]'";
-			$allemails= perform_query($dbc3, $sqlselectemails);	
+			$allemails= perform_query($dbc3, $sqlselectemails);
 		}
 		else if(count($membershiptype)==2){
 			$sqlselectemails= "SELECT * FROM `newclubdb`  WHERE memtype='$membershiptype[0]' OR memtype='$membershiptype[1]'";
@@ -113,8 +114,8 @@
 			$sqlselectemails= "SELECT * FROM `newclubdb`  WHERE memtype='$membershiptype[0]' OR  memtype='$membershiptype[1]' OR memtype='$membershiptype[2]' ";
 			$allemails= perform_query($dbc3, $sqlselectemails);
 		}
-		
-		
+
+
 		while($emailconfiguration = mysqli_fetch_assoc($allemails)){
 			$to1=$emailconfiguration['email'];
 			mail($to1,$subject1,$txt1,$headers1);
@@ -126,10 +127,8 @@
 		else{
 			echo "Email could not be sent, Please enter the correct password!";
 		}
-		
-		
+
+
 	}
-	
+
 ?>
-
-
